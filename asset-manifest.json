@@ -1,23 +1,22 @@
 {
   "files": {
-    "main.css": "/computational-seed-mix-design/static/css/main.5f361e03.chunk.css",
-    "main.js": "/computational-seed-mix-design/static/js/main.702a6654.chunk.js",
-    "main.js.map": "/computational-seed-mix-design/static/js/main.702a6654.chunk.js.map",
+    "main.css": "/computational-seed-mix-design/static/css/main.d0b2f819.chunk.css",
+    "main.js": "/computational-seed-mix-design/static/js/main.17d191aa.chunk.js",
+    "main.js.map": "/computational-seed-mix-design/static/js/main.17d191aa.chunk.js.map",
     "runtime-main.js": "/computational-seed-mix-design/static/js/runtime-main.6f18d0c1.js",
     "runtime-main.js.map": "/computational-seed-mix-design/static/js/runtime-main.6f18d0c1.js.map",
-    "static/js/2.1f473c1c.chunk.js": "/computational-seed-mix-design/static/js/2.1f473c1c.chunk.js",
-    "static/js/2.1f473c1c.chunk.js.map": "/computational-seed-mix-design/static/js/2.1f473c1c.chunk.js.map",
+    "static/js/2.d096c847.chunk.js": "/computational-seed-mix-design/static/js/2.d096c847.chunk.js",
+    "static/js/2.d096c847.chunk.js.map": "/computational-seed-mix-design/static/js/2.d096c847.chunk.js.map",
     "index.html": "/computational-seed-mix-design/index.html",
-    "precache-manifest.844c331496844877951e160ea5d6fc92.js": "/computational-seed-mix-design/precache-manifest.844c331496844877951e160ea5d6fc92.js",
+    "precache-manifest.4fe66388b9b429351a47ee144533289c.js": "/computational-seed-mix-design/precache-manifest.4fe66388b9b429351a47ee144533289c.js",
     "service-worker.js": "/computational-seed-mix-design/service-worker.js",
-    "static/css/main.5f361e03.chunk.css.map": "/computational-seed-mix-design/static/css/main.5f361e03.chunk.css.map",
-    "static/js/2.1f473c1c.chunk.js.LICENSE.txt": "/computational-seed-mix-design/static/js/2.1f473c1c.chunk.js.LICENSE.txt",
-    "static/media/logo.svg": "/computational-seed-mix-design/static/media/logo.5d5d9eef.svg"
+    "static/css/main.d0b2f819.chunk.css.map": "/computational-seed-mix-design/static/css/main.d0b2f819.chunk.css.map",
+    "static/js/2.d096c847.chunk.js.LICENSE.txt": "/computational-seed-mix-design/static/js/2.d096c847.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.6f18d0c1.js",
-    "static/js/2.1f473c1c.chunk.js",
-    "static/css/main.5f361e03.chunk.css",
-    "static/js/main.702a6654.chunk.js"
+    "static/js/2.d096c847.chunk.js",
+    "static/css/main.d0b2f819.chunk.css",
+    "static/js/main.17d191aa.chunk.js"
   ]
 }

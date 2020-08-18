@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/computational-seed-mix-design/precache-manifest.844c331496844877951e160ea5d6fc92.js"
+  "/computational-seed-mix-design/precache-manifest.4fe66388b9b429351a47ee144533289c.js"
 );
 
 self.addEventListener('message', (event) => {
