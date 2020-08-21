@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/computational-seed-mix-design/static/css/main.d0b2f819.chunk.css",
-    "main.js": "/computational-seed-mix-design/static/js/main.63554f0a.chunk.js",
-    "main.js.map": "/computational-seed-mix-design/static/js/main.63554f0a.chunk.js.map",
+    "main.css": "/computational-seed-mix-design/static/css/main.20462407.chunk.css",
+    "main.js": "/computational-seed-mix-design/static/js/main.fe24d538.chunk.js",
+    "main.js.map": "/computational-seed-mix-design/static/js/main.fe24d538.chunk.js.map",
     "runtime-main.js": "/computational-seed-mix-design/static/js/runtime-main.6f18d0c1.js",
     "runtime-main.js.map": "/computational-seed-mix-design/static/js/runtime-main.6f18d0c1.js.map",
-    "static/js/2.da9fc70f.chunk.js": "/computational-seed-mix-design/static/js/2.da9fc70f.chunk.js",
-    "static/js/2.da9fc70f.chunk.js.map": "/computational-seed-mix-design/static/js/2.da9fc70f.chunk.js.map",
+    "static/js/2.9ed3c0b4.chunk.js": "/computational-seed-mix-design/static/js/2.9ed3c0b4.chunk.js",
+    "static/js/2.9ed3c0b4.chunk.js.map": "/computational-seed-mix-design/static/js/2.9ed3c0b4.chunk.js.map",
     "index.html": "/computational-seed-mix-design/index.html",
-    "precache-manifest.03eb929ad0954eb6c97acc8c1f8984a3.js": "/computational-seed-mix-design/precache-manifest.03eb929ad0954eb6c97acc8c1f8984a3.js",
+    "precache-manifest.6cb2836309666db3cc4c6496be49679e.js": "/computational-seed-mix-design/precache-manifest.6cb2836309666db3cc4c6496be49679e.js",
     "service-worker.js": "/computational-seed-mix-design/service-worker.js",
-    "static/css/main.d0b2f819.chunk.css.map": "/computational-seed-mix-design/static/css/main.d0b2f819.chunk.css.map",
-    "static/js/2.da9fc70f.chunk.js.LICENSE.txt": "/computational-seed-mix-design/static/js/2.da9fc70f.chunk.js.LICENSE.txt"
+    "static/css/main.20462407.chunk.css.map": "/computational-seed-mix-design/static/css/main.20462407.chunk.css.map",
+    "static/js/2.9ed3c0b4.chunk.js.LICENSE.txt": "/computational-seed-mix-design/static/js/2.9ed3c0b4.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.6f18d0c1.js",
-    "static/js/2.da9fc70f.chunk.js",
-    "static/css/main.d0b2f819.chunk.css",
-    "static/js/main.63554f0a.chunk.js"
+    "static/js/2.9ed3c0b4.chunk.js",
+    "static/css/main.20462407.chunk.css",
+    "static/js/main.fe24d538.chunk.js"
   ]
 }
