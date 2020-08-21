@@ -13,7 +13,11 @@
 }
 
 #ob-report-pane {
-    width: 250px;
+    width: 300px;
+}
+
+#mix-composition-table{
+    width: 100%;
 }
 
 .slider {
@@ -49,4 +53,8 @@
 
 #copy-mix-dialog {
     margin: 15px;
+}
+
+.MuiTableCell-head {
+    font-weight: bolder;
 }

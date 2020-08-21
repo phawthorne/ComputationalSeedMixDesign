@@ -7,5 +7,5 @@ is a prototype of a visualization component of a larger tool we are developing t
 building and optimization of seed mixes based on national data. 
 
 This demo illustrates browsing through thousands of optimization outputs to identify mixes that meet
-desired criteria and downloading those mixes. 
+desired criteria. 
 

@@ -4,11 +4,19 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';import * as d3 from 'd3';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+import * as d3 from 'd3';
 import './OptimBrowser.css';
 
 
-const OptimBrowser = ({ panedata, setpane }) => {
+const OptimBrowser = () => {
 
   const figH = 600;
   const figW = 780;
@@ -16,7 +24,6 @@ const OptimBrowser = ({ panedata, setpane }) => {
 
   const [canvas, setCanvas] = useState(null);
   const [optimData, setOptimData] = useState(null);
-  const [plotData, setPlotData] = useState(null);
   const [selectedMix, setSelectedMix] = useState(null);
   const [xAxisObjective, setXAxisObjective] = useState("cost");
   const [yAxisObjective, setYAxisObjective] = useState("bloom");
@@ -63,7 +70,7 @@ const OptimBrowser = ({ panedata, setpane }) => {
       .attr("id", "x-axis-label")
       .attr("transform", `translate(${figW/2}, ${figH - margin.bottom + 40})`)
       .style("text-anchor", "middle")
-      .text(xAxisObjective);
+      .text(axisLabels[xAxisObjective]);
 
     const ymin = 15;
     const ymax = d3.max(optimData, d=>+d.bloom);
@@ -83,7 +90,7 @@ const OptimBrowser = ({ panedata, setpane }) => {
       .attr("id", "y-axis-label")
       .attr("transform", `translate(18, ${figH/2}) rotate(-90)`)
       .style("text-anchor", "middle")
-      .text(yAxisObjective);
+      .text(axisLabels[yAxisObjective]);
   }, [canvas, optimData])
   // }, [canvas, optimData, xAxisObjective, yAxisObjective])
 
@@ -173,7 +180,7 @@ const OptimBrowser = ({ panedata, setpane }) => {
       .attr("stroke-width", 1.5)
       .attr("font-size", "12pt");
     canvas.select("text#x-axis-label")
-      .text(xAxisObjective);
+      .text(axisLabels[xAxisObjective]);
 
     const ymin = Math.floor(0.98 * d3.min(optimData, d=>+d[yAxisObjective]));
     const ymax = d3.max(optimData, d=>+d[yAxisObjective]);
@@ -188,7 +195,7 @@ const OptimBrowser = ({ panedata, setpane }) => {
       .attr("stroke-width", 1.5)
       .attr("font-size", "12pt");
     canvas.select("text#y-axis-label")
-      .text(yAxisObjective);
+      .text(axisLabels[yAxisObjective]);
     
     function pointColor(pt) {
       if (pt.indiv === selectedPointID) { return "red" }
@@ -211,7 +218,7 @@ const OptimBrowser = ({ panedata, setpane }) => {
     }
     
     const t = d3.transition()
-      .duration(500);
+      .duration(1000);
     canvas.selectAll("circle")
       .data(optimData)
       .join(
@@ -269,10 +276,6 @@ const OptimBrowser = ({ panedata, setpane }) => {
       
     <div id="ob-plot-pane">
       <h2>Scatter Plot</h2>
-      {/* 
-        const [xAxisObjective, setXAxisObjective] = useState("cost");
-        const [yAxisObjective, setYAxisObjective] = useState("bloom");
-      */}
       <AxisControl
         xAxis={xAxisObjective}
         setXAxis={setXAxisObjective}
@@ -298,7 +301,7 @@ const AxisControl = ({xAxis, setXAxis, yAxis, setYAxis}) => {
   )
 }
 
-
+/** material-ui style definitions */
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -306,6 +309,12 @@ const useStyles = makeStyles((theme) => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+  table: {
+    minWidth: 250,
+  },
+  boldCell: {
+    fontWeight: "bolder",
   },
 }));
 
@@ -367,24 +376,93 @@ const Slider = ({name, range, update}) => {
 }
 
 
-const ReportPane = ({ mixid }) => {
-  const [open, setOpen] = useState(false);
+const ReportPane = ({ mixid, scores }) => {
+  const [composition, setComposition] = useState([{species:"None", weight:0.0}]);
 
+  const compSort = (a, b) => {
+    if (a.species < b.species) { return -1 }
+    if (b.species < a.species) { return 1}
+    return 0
+  }
+
+  /** LOAD MIX COMPOSITION ON MIXID CHANGE */
+  useEffect(() => {
+    if (mixid === null){ return }
+    async function fetchData() {
+      const dataURL = process.env.PUBLIC_URL + `/static/data/mixes/mix${mixid}.csv`;
+      console.log(dataURL);
+      const data = await d3.csv(dataURL, (d) => {
+        return {
+          id: +d.specindices,
+          species: d.specnames,
+          weight: +d.weights
+        }
+      });
+      data.sort(compSort)
+      setComposition(data);
+    };
+    fetchData();
+  }, [mixid])
 
   return(
     <div id="ob-report-pane">
       <div id='ob-report-table'>
-        <h2>Report Pane</h2>
-          Selected mix: {mixid}
+        <h2>Mix Composition</h2>
+          {/* <MixScoreTable scores={scores} /> */}
+          <MixCompositionTable composition={composition} />
       </div>
-      {/* <div id='ob-report-save-button'>
-        {mixid !== null && authenticationService.currentUserValue &&
-          <button type="button" onClick={handleSaveButtonClick}>Save to project</button> }
-      </div>
-      <CopyMixDialog selectedMix={mixid} onClose={handleSaveDialogClose} open={open} /> */}
     </div>
   )
 }
+
+
+const MixScoreTable = (scores) => {
+  
+  return (
+    <div id="mix-score-table">
+      Mix Score Table
+    </div>
+  )
+}
+
+
+const MixCompositionTable = ({composition}) => {
+  const classes = useStyles();
+
+  return(
+    <div id="mix-composition-table">
+      <Table className={classes.table} size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell className={classes.boldCell} style={{padding: "6px"}}>Species</TableCell>
+            <TableCell className={classes.boldCell} align="right" style={{padding: "6px"}}>Weight&nbsp;(oz)</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {composition.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell component="th" scope="row" style={{padding: "6px"}}>
+                {row.species.replace("_", " ")}
+              </TableCell>
+              <TableCell align="right" style={{padding: "6px"}}>
+                {Math.round(16*row.weight)}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
+
+const axisLabels = {
+  bloom: "Bloom",
+  cost: "Cost",
+  shannon: "Shannon diversity",
+  consval: "Conservatism",
+  phylo_dist: "Phylogenetic distance"
+};
 
 
 export { OptimBrowser }

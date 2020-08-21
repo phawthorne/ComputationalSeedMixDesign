@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 
 *.code-workspace
+.vscode/*
+
+public/static/data/mixes/*
