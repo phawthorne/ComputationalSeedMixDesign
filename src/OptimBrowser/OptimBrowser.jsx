@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import * as d3 from 'd3';
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';import * as d3 from 'd3';
 import './OptimBrowser.css';
 
 
@@ -11,6 +16,7 @@ const OptimBrowser = ({ panedata, setpane }) => {
 
   const [canvas, setCanvas] = useState(null);
   const [optimData, setOptimData] = useState(null);
+  const [plotData, setPlotData] = useState(null);
   const [selectedMix, setSelectedMix] = useState(null);
   const [xAxisObjective, setXAxisObjective] = useState("cost");
   const [yAxisObjective, setYAxisObjective] = useState("bloom");
@@ -48,11 +54,13 @@ const OptimBrowser = ({ panedata, setpane }) => {
       .scale(xScale)
       .ticks(4);
     canvas.append("g")
+      .attr("id", "x-axis")
       .attr("transform", `translate(0, ${figH - margin.bottom})`)
       .call(xAxis)
       .attr("stroke-width", 1.5)
       .attr("font-size", "12pt");
     canvas.append("text")
+      .attr("id", "x-axis-label")
       .attr("transform", `translate(${figW/2}, ${figH - margin.bottom + 40})`)
       .style("text-anchor", "middle")
       .text(xAxisObjective);
@@ -66,15 +74,18 @@ const OptimBrowser = ({ panedata, setpane }) => {
       .scale(yScale)
       .ticks(5);
     canvas.append("g")
+      .attr("id", "y-axis")
       .attr("transform", `translate(${margin.left}, 0)`)
       .call(yAxis)
       .attr("stroke-width", 1.5)
       .attr("font-size", "12pt");
     canvas.append("text")
+      .attr("id", "y-axis-label")
       .attr("transform", `translate(18, ${figH/2}) rotate(-90)`)
       .style("text-anchor", "middle")
       .text(yAxisObjective);
-  }, [canvas, optimData, xAxisObjective, yAxisObjective])
+  }, [canvas, optimData])
+  // }, [canvas, optimData, xAxisObjective, yAxisObjective])
 
   /** Load static data */
   useEffect(() => {
@@ -143,23 +154,42 @@ const OptimBrowser = ({ panedata, setpane }) => {
   useEffect(() => {
     if (canvas === null || optimData === null){ return }
     updatePlot();
-  }, [canvas, optimData, costFilter, bloomFilter, shannonFilter, consFilter, phyloDistFilter])
+  }, [canvas, optimData, costFilter, bloomFilter, shannonFilter, consFilter, phyloDistFilter, xAxisObjective, yAxisObjective])
 
   function updatePlot() {
     var selectedPointID = selectedMix; // This is awkward - need to track 
 
     /** Axes */
-    const xmin = 0;
-    const xmax = d3.max(optimData, d=>+d.cost);
+    const xmin = Math.floor(0.98 * d3.min(optimData, d=>+d[xAxisObjective]));
+    const xmax = d3.max(optimData, d=>+d[xAxisObjective]);
     const xScale = d3.scaleLinear()
       .domain([xmin, xmax])
       .range([margin.left, figW - margin.right]);
-    const ymin = 15;
-    const ymax = d3.max(optimData, d=>+d.bloom);
+    const xAxis = d3.axisBottom()
+      .scale(xScale)
+      .ticks(5);
+    canvas.select("g#x-axis")
+      .call(xAxis)
+      .attr("stroke-width", 1.5)
+      .attr("font-size", "12pt");
+    canvas.select("text#x-axis-label")
+      .text(xAxisObjective);
+
+    const ymin = Math.floor(0.98 * d3.min(optimData, d=>+d[yAxisObjective]));
+    const ymax = d3.max(optimData, d=>+d[yAxisObjective]);
     const yScale = d3.scaleLinear()
       .domain([ymin, ymax])
       .range([figH-margin.bottom, margin.top]);
-
+    const yAxis = d3.axisLeft()
+      .scale(yScale)
+      .ticks(5);
+    canvas.select("g#y-axis")
+      .call(yAxis)
+      .attr("stroke-width", 1.5)
+      .attr("font-size", "12pt");
+    canvas.select("text#y-axis-label")
+      .text(yAxisObjective);
+    
     function pointColor(pt) {
       if (pt.indiv === selectedPointID) { return "red" }
       else if (
@@ -181,7 +211,7 @@ const OptimBrowser = ({ panedata, setpane }) => {
     }
     
     const t = d3.transition()
-      .duration(100);
+      .duration(500);
     canvas.selectAll("circle")
       .data(optimData)
       .join(
@@ -215,6 +245,8 @@ const OptimBrowser = ({ panedata, setpane }) => {
               .attr("id", "selected-point");
           }),
         update => update.transition(t)
+          .attr("cx", d => xScale(+d[xAxisObjective]))
+          .attr("cy", d => yScale(+d[yAxisObjective]))
           .attr("fill", d => pointColor(d))
           .attr("opacity", d => pointOpacity(d)),
         exit => exit.remove()
@@ -237,6 +269,16 @@ const OptimBrowser = ({ panedata, setpane }) => {
       
     <div id="ob-plot-pane">
       <h2>Scatter Plot</h2>
+      {/* 
+        const [xAxisObjective, setXAxisObjective] = useState("cost");
+        const [yAxisObjective, setYAxisObjective] = useState("bloom");
+      */}
+      <AxisControl
+        xAxis={xAxisObjective}
+        setXAxis={setXAxisObjective}
+        yAxis={yAxisObjective}
+        setYAxis={setYAxisObjective}
+      />
       <div id="plot-pane"></div>
     </div>
 
@@ -245,6 +287,49 @@ const OptimBrowser = ({ panedata, setpane }) => {
   )
 }
 
+
+const AxisControl = ({xAxis, setXAxis, yAxis, setYAxis}) => {
+
+  return (
+    <div id="axis-control">
+      <AxisSelect value={xAxis} updater={setXAxis} />
+      <AxisSelect value={yAxis} updater={setYAxis} />
+    </div>
+  )
+}
+
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 200,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
+const AxisSelect = ({label, value, updater}) => {
+  const classes = useStyles();
+  return (
+    <FormControl className={classes.formControl}>
+      <InputLabel >{label}</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={value}
+        onChange={e=>updater(e.target.value)}>
+        
+        <MenuItem value={"bloom"}>Bloom</MenuItem>
+        <MenuItem value={"cost"}>Cost</MenuItem>
+        <MenuItem value={"shannon"}>Shannon diversity</MenuItem>
+        <MenuItem value={"consval"}>Conservatism</MenuItem>
+        <MenuItem value={"phylo_dist"}>Phylogenetic distance</MenuItem>
+      
+      </Select>
+    </FormControl>
+  )
+}
 
 
 const Slider = ({name, range, update}) => {
