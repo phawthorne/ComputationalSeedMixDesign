@@ -1,15 +1,15 @@
-#optim-browser{
+#optim-browser {
     display: flex;
     flex-direction: row;
 }
 
 #ob-slider-pane {
     padding-left: 10px;
-    width: 250px;
+    width: 210px;
 }
 
 #ob-plot-pane{
-    width: 800px;
+    width: 700px;
 }
 
 #ob-report-pane {
@@ -18,6 +18,13 @@
 
 #mix-composition-table{
     width: 100%;
+}
+
+#axis-control {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 60px;
+    padding-right: 60px;
 }
 
 .slider {
@@ -51,9 +58,6 @@
     width: 40px;
 }
 
-#copy-mix-dialog {
-    margin: 15px;
-}
 
 .MuiTableCell-head {
     font-weight: bolder;

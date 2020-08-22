@@ -2,7 +2,7 @@
   text-align: center;
 }
 body, body *, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 .App-logo {
   animation: App-logo-spin infinite 20s linear;

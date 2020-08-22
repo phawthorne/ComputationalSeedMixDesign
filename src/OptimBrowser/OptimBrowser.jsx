@@ -10,7 +10,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
 import * as d3 from 'd3';
 import './OptimBrowser.css';
@@ -18,9 +17,9 @@ import './OptimBrowser.css';
 
 const OptimBrowser = () => {
 
-  const figH = 600;
-  const figW = 780;
-  const margin = ({top:50, right:50, bottom: 50, left: 50});
+  const figH = 580;
+  const figW = 690;
+  const margin = ({top:10, right:40, bottom: 50, left: 50});
 
   const [canvas, setCanvas] = useState(null);
   const [optimData, setOptimData] = useState(null);
@@ -103,7 +102,7 @@ const OptimBrowser = () => {
         return {
           indiv: +d.indiv,
           cost: +d.cost,
-          phylo_dist: +d.phylo_dist,
+          phylodist: +d.phylo_dist,
           bloom: +d.bloom,
           shannon: +d.shannon,
           consval: +d.consval,
@@ -128,8 +127,8 @@ const OptimBrowser = () => {
         max: Math.ceil(d3.max(data, d=>+d.consval))
       });
       setPhyloDistRange({
-        min: Math.floor(d3.min(data, d=>+d.phylo_dist)),
-        max: Math.ceil(d3.max(data, d=>+d.phylo_dist))
+        min: Math.floor(d3.min(data, d=>+d.phylodist)),
+        max: Math.ceil(d3.max(data, d=>+d.phylodist))
       });
       setCostFilter({
         min: Math.floor(d3.min(data, d=>+d.cost)), 
@@ -148,8 +147,8 @@ const OptimBrowser = () => {
         max: Math.ceil(d3.max(data, d=>+d.consval))
       });
       setPhyloDistFilter({
-        min: Math.floor(d3.min(data, d=>+d.phylo_dist)),
-        max: Math.ceil(d3.max(data, d=>+d.phylo_dist))
+        min: Math.floor(d3.min(data, d=>+d.phylodist)),
+        max: Math.ceil(d3.max(data, d=>+d.phylodist))
       });
       setOptimData(data);
       // setOptimData(data.slice(1,10));
@@ -204,7 +203,7 @@ const OptimBrowser = () => {
         pt.cost >= costFilter.min && pt.cost <= costFilter.max &&
         pt.shannon >= shannonFilter.min && pt.shannon <= shannonFilter.max &&
         pt.consval >= consFilter.min && pt.consval <= consFilter.max &&
-        pt.phylo_dist >= phyloDistFilter.min && pt.phylo_dist <= phyloDistFilter.max
+        pt.phylodist >= phyloDistFilter.min && pt.phylodist <= phyloDistFilter.max
       ) {
         return "blue"
       }
@@ -261,6 +260,21 @@ const OptimBrowser = () => {
 
   }
 
+  const mixRelativeScores = () => {
+    if (optimData === null || selectedMix === null) { return }
+    
+    console.log(selectedMix);
+    const s = optimData.find(e => e.indiv === selectedMix);
+    const vals = {
+      bloom: (s.bloom - bloomRange.min) / (bloomRange.max - bloomRange.min),
+      cost: (s.cost - costRange.min) / (costRange.max - costRange.min),
+      shannon: (s.shannon - shannonRange.min) / (shannonRange.max - shannonRange.min),
+      consval: (s.consval - consRange.min) / (consRange.max - consRange.min),
+      phylodist: (s.phylodist - phyloDistRange.min) / (phyloDistRange.max - phyloDistRange.min)
+    }
+
+    return vals
+  }
 
   return (
     <div id="optim-browser">
@@ -285,7 +299,7 @@ const OptimBrowser = () => {
       <div id="plot-pane"></div>
     </div>
 
-      <ReportPane mixid={selectedMix}/>
+      <ReportPane mixid={selectedMix} scores={mixRelativeScores()}/>
     </div>
   )
 }
@@ -295,8 +309,8 @@ const AxisControl = ({xAxis, setXAxis, yAxis, setYAxis}) => {
 
   return (
     <div id="axis-control">
-      <AxisSelect value={xAxis} updater={setXAxis} />
-      <AxisSelect value={yAxis} updater={setYAxis} />
+      <AxisSelect label="x-axis" value={xAxis} updater={setXAxis} />
+      <AxisSelect label="y-axis" value={yAxis} updater={setYAxis} />
     </div>
   )
 }
@@ -333,7 +347,7 @@ const AxisSelect = ({label, value, updater}) => {
         <MenuItem value={"cost"}>Cost</MenuItem>
         <MenuItem value={"shannon"}>Shannon diversity</MenuItem>
         <MenuItem value={"consval"}>Conservatism</MenuItem>
-        <MenuItem value={"phylo_dist"}>Phylogenetic distance</MenuItem>
+        <MenuItem value={"phylodist"}>Phylogenetic distance</MenuItem>
       
       </Select>
     </FormControl>
@@ -408,7 +422,7 @@ const ReportPane = ({ mixid, scores }) => {
     <div id="ob-report-pane">
       <div id='ob-report-table'>
         <h2>Mix Composition</h2>
-          {/* <MixScoreTable scores={scores} /> */}
+          <MixScoreTable scores={scores} />
           <MixCompositionTable composition={composition} />
       </div>
     </div>
@@ -416,11 +430,96 @@ const ReportPane = ({ mixid, scores }) => {
 }
 
 
-const MixScoreTable = (scores) => {
-  
+const MixScoreTable = ({scores}) => {
+
+  const figH = 150;
+  const figW = 290;
+  const margin = {top: 20, right: 10, bottom: 5, left: 60};
+  const labels = ["Bloom", "Cost", "Shan Div", "Conserv", "Phy Dist"];
+  const xScale = d3.scaleLinear()
+    .domain([0,1])
+    .range([margin.left, figW - margin.right])
+  const yScale = d3.scaleBand()
+    .domain(labels.map(d => d))
+    .range([margin.top, figH - margin.bottom])
+    // .padding(0.1)
+    // .round(true)
+
+  const [canvas, setCanvas] = useState(null);
+
+  /** Create the SVG canvas */
+  useEffect(() => {
+    const c = d3.select("#mix-score-plot")
+      .append("svg")
+        .attr("width", figW)
+        .attr("height", figH)
+    const xAxis = d3.axisTop()
+      .scale(xScale)
+      .ticks(6);
+    c.append("g")
+      .attr("id", "score-plot-xaxis")
+      .attr("transform", `translate(0, ${margin.top})`)
+      .call(xAxis)
+      .attr("stroke-width", 1)
+      .attr("font-size", "9pt")
+      .call(g => g.select(".domain").remove())
+    const yAxis = d3.axisLeft()
+      .scale(yScale)
+      .ticks(0);
+    c.append("g")
+      .attr("id", "score-plot-yaxis")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(yAxis)
+      .attr("stroke-width", 1)
+      .attr("font-size", "9pt")
+      .call(g => g.select(".domain").remove())
+      .call(g => g.selectAll("line").remove());
+
+    setCanvas(c);
+  }, [])
+
+  /** Display axes */
+  useEffect(() => {
+    if(canvas === null) {return}
+    const vals = [scores.bloom, scores.cost, scores.shannon, scores.consval, scores.phylodist];
+    const t = d3.transition()
+      .duration(500);
+
+    canvas.selectAll("line.plot-element")
+      .data(vals)
+      .join(
+        enter => enter.append("line")
+          .attr("class", "plot-element")
+          .style("stroke", "black")
+          .attr("x1", xScale(0))
+          .attr("x2", d => xScale(d))
+          .attr("y1", (d, i) => yScale(labels[i]) + yScale.bandwidth()/2 )
+          .attr("y2", (d, i) => yScale(labels[i]) + yScale.bandwidth()/2 ),
+        update => update.transition(t)
+          .attr("x2", d => xScale(d)),
+        exit => exit.remove()
+      )
+    
+    canvas.selectAll("circle")
+      .data(vals)
+      .join(
+        enter => enter.append("circle")
+          .attr("cx", d => xScale(d))
+          .attr("cy", (d, i) => yScale(labels[i]) + yScale.bandwidth()/2 )
+          .attr("r", 4)
+          .style("fill", "orange")
+          .style("stroke", "black"),
+        update => update.transition(t)
+          .attr("cx", d => xScale(d)),
+        exit => exit.remove()
+      )
+    
+
+  }, [scores])
+
   return (
-    <div id="mix-score-table">
-      Mix Score Table
+    <div id="mix-score-panel">
+      <div id="mix-score-plot"></div>
     </div>
   )
 }
@@ -441,10 +540,10 @@ const MixCompositionTable = ({composition}) => {
         <TableBody>
           {composition.map((row) => (
             <TableRow key={row.id}>
-              <TableCell component="th" scope="row" style={{padding: "6px"}}>
+              <TableCell component="th" scope="row" style={{padding: "3px"}}>
                 {row.species.replace("_", " ")}
               </TableCell>
-              <TableCell align="right" style={{padding: "6px"}}>
+              <TableCell align="right" style={{padding: "3px"}}>
                 {Math.round(16*row.weight)}
               </TableCell>
             </TableRow>
@@ -461,7 +560,7 @@ const axisLabels = {
   cost: "Cost",
   shannon: "Shannon diversity",
   consval: "Conservatism",
-  phylo_dist: "Phylogenetic distance"
+  phylodist: "Phylogenetic distance"
 };
 
 
