@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/computational-seed-mix-design/static/css/main.08bdbf59.chunk.css",
-    "main.js": "/computational-seed-mix-design/static/js/main.e81ff34c.chunk.js",
-    "main.js.map": "/computational-seed-mix-design/static/js/main.e81ff34c.chunk.js.map",
+    "main.js": "/computational-seed-mix-design/static/js/main.881480a1.chunk.js",
+    "main.js.map": "/computational-seed-mix-design/static/js/main.881480a1.chunk.js.map",
     "runtime-main.js": "/computational-seed-mix-design/static/js/runtime-main.6f18d0c1.js",
     "runtime-main.js.map": "/computational-seed-mix-design/static/js/runtime-main.6f18d0c1.js.map",
     "static/js/2.09f86790.chunk.js": "/computational-seed-mix-design/static/js/2.09f86790.chunk.js",
     "static/js/2.09f86790.chunk.js.map": "/computational-seed-mix-design/static/js/2.09f86790.chunk.js.map",
     "index.html": "/computational-seed-mix-design/index.html",
-    "precache-manifest.2fce03b178fe1cd730b88f4c6bda0e63.js": "/computational-seed-mix-design/precache-manifest.2fce03b178fe1cd730b88f4c6bda0e63.js",
+    "precache-manifest.db96aaa186a1feece3a59ee9c5d106d0.js": "/computational-seed-mix-design/precache-manifest.db96aaa186a1feece3a59ee9c5d106d0.js",
     "service-worker.js": "/computational-seed-mix-design/service-worker.js",
     "static/css/main.08bdbf59.chunk.css.map": "/computational-seed-mix-design/static/css/main.08bdbf59.chunk.css.map",
     "static/js/2.09f86790.chunk.js.LICENSE.txt": "/computational-seed-mix-design/static/js/2.09f86790.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.6f18d0c1.js",
     "static/js/2.09f86790.chunk.js",
     "static/css/main.08bdbf59.chunk.css",
-    "static/js/main.e81ff34c.chunk.js"
+    "static/js/main.881480a1.chunk.js"
   ]
 }

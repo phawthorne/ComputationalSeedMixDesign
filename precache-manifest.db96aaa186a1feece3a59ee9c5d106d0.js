@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c521bd2af383146e23dc24699bd026ca",
+    "revision": "dfbfa59f4bedc5c98fe3be1b1e853546",
     "url": "/computational-seed-mix-design/index.html"
   },
   {
-    "revision": "fd778c471b10c88d0c3a",
+    "revision": "36035f96472eb375b8a4",
     "url": "/computational-seed-mix-design/static/css/main.08bdbf59.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/computational-seed-mix-design/static/js/2.09f86790.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "fd778c471b10c88d0c3a",
-    "url": "/computational-seed-mix-design/static/js/main.e81ff34c.chunk.js"
+    "revision": "36035f96472eb375b8a4",
+    "url": "/computational-seed-mix-design/static/js/main.881480a1.chunk.js"
   },
   {
     "revision": "0f5aa9eb6a4b77992243",
