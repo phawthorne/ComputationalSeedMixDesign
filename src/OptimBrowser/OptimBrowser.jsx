@@ -63,7 +63,7 @@ const OptimBrowser = () => {
       .attr("id", "x-axis")
       .attr("transform", `translate(0, ${figH - margin.bottom})`)
       .call(xAxis)
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 1.25)
       .attr("font-size", "12pt");
     canvas.append("text")
       .attr("id", "x-axis-label")
@@ -83,7 +83,7 @@ const OptimBrowser = () => {
       .attr("id", "y-axis")
       .attr("transform", `translate(${margin.left}, 0)`)
       .call(yAxis)
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 1.25)
       .attr("font-size", "12pt");
     canvas.append("text")
       .attr("id", "y-axis-label")
@@ -176,7 +176,7 @@ const OptimBrowser = () => {
       .ticks(5);
     canvas.select("g#x-axis")
       .call(xAxis)
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 1.25)
       .attr("font-size", "12pt");
     canvas.select("text#x-axis-label")
       .text(axisLabels[xAxisObjective]);
@@ -191,7 +191,7 @@ const OptimBrowser = () => {
       .ticks(5);
     canvas.select("g#y-axis")
       .call(yAxis)
-      .attr("stroke-width", 1.5)
+      .attr("stroke-width", 1.25)
       .attr("font-size", "12pt");
     canvas.select("text#y-axis-label")
       .text(axisLabels[yAxisObjective]);
@@ -289,7 +289,7 @@ const OptimBrowser = () => {
     </div>
       
     <div id="ob-plot-pane">
-      <h2>Scatter Plot</h2>
+      <h2>Mix pool objective values</h2>
       <AxisControl
         xAxis={xAxisObjective}
         setXAxis={setXAxisObjective}
@@ -421,9 +421,9 @@ const ReportPane = ({ mixid, scores }) => {
   return(
     <div id="ob-report-pane">
       <div id='ob-report-table'>
-        <h2>Mix Composition</h2>
-          <MixScoreTable scores={scores} />
-          <MixCompositionTable composition={composition} />
+        <h2>Selected Mix</h2>
+        <MixScoreTable scores={scores} />
+        <MixCompositionTable composition={composition} />
       </div>
     </div>
   )
@@ -519,6 +519,7 @@ const MixScoreTable = ({scores}) => {
 
   return (
     <div id="mix-score-panel">
+      <h3>Relative scores</h3>
       <div id="mix-score-plot"></div>
     </div>
   )
@@ -530,6 +531,7 @@ const MixCompositionTable = ({composition}) => {
 
   return(
     <div id="mix-composition-table">
+      <h3>Mix composition</h3>
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
